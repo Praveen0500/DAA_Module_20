@@ -1,90 +1,83 @@
-
-# EX 2B BACKTRACKING - NQUEEN PROBLEM
-
+# EX 2A BACKTRACKING - RAT IN MAZE PROBLEM
 ## AIM:
-To solve the N-Queen problem using backtracking, which places N queens on an N*N chessboard such that no two queens threaten each other.
+To implement the Rat in a Maze problem using backtracking and find all possible paths from the start to the destination in a given maze.
 
 
 ## Algorithm
-1. Initialize an N x N board with all zeros.
+
+1. Initialize a solution matrix with zeros.
    
-2.Try placing a queen in each column, one by one.
+2.Start at the top-left corner and recursively explore possible paths.
 
-3.For each placement, check if it's safe (no queen in the same row, column, or diagonal).
+3.Check if moving to a cell is safe (within bounds and open).
 
-4.If safe, recursively attempt to place queens in the next column.
+4.If reaching the bottom-right corner, mark the cell as part of the path.
 
-5.If all queens are placed successfully, print the solution; otherwise, backtrack and try the next possibility.
-   
+5.If a path is found, print the solution matrix; otherwise, backtrack and return "Solution doesn't exist."
 
 ## Program:
-#### Program to implement N-Queen problem using backtracking.
-#### Developed by: PRAVEEN S
-#### Register Number:212222240078
+
+### Program to implement Rat in a Maze.
+
+### Developed by: PRAVEEN S
+
+### Register Number:  212222240078
 
 ```py
-global N
-N = int(input())
- 
-def printSolution(board):
-    for i in range(N):
-        for j in range(N):
-            print(board[i][j], end = " ")
-        print()
- 
-def isSafe(board, row, col):
- 
-    # Check this row on left side
-    for i in range(col):
-        if board[row][i] == 1:
-            return False
- 
-    # Check upper diagonal on left side
-    for i, j in zip(range(row, -1, -1),
-                    range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
- 
-    # Check lower diagonal on left side
-    for i, j in zip(range(row, N, 1),
-                    range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
- 
+N = 4
+
+def printSolution(sol):
+    for i in sol:
+        for j in i:
+            print(str(j) + " ", end="")
+        print("")
+
+def isSafe(maze, x, y):
+    return x >= 0 and x < N and y >= 0 and y < N and maze[x][y] == 1
+
+def solveMaze(maze):
+    sol = [[0 for _ in range(N)] for _ in range(N)]
+
+    if not solveMazeUtil(maze, 0, 0, sol):
+        print("Solution doesn't exist")
+        return False
+
+    printSolution(sol)
     return True
- 
-def solveNQUtil(board, col):
-    if col>=N:
+
+def solveMazeUtil(maze, x, y, sol):
+    # If (x, y) is the destination, return true
+    if x == N - 1 and y == N - 1:
+        sol[x][y] = 1
         return True
+
+    if isSafe(maze, x, y):
+        sol[x][y] = 1  # Mark as part of the solution path
         
-    for i in range(N):
-        if isSafe(board,i,col):
-            board[i][col] = 1
-            if solveNQUtil(board, col+1):
-                return True
-            board[i][col]=0
+        # Move right
+        if solveMazeUtil(maze, x, y + 1, sol):
+            return True
+        
+        # Move down
+        if solveMazeUtil(maze, x + 1, y, sol):
+            return True
+        
+        sol[x][y] = 0  # Backtrack
+    
     return False
 
-def solveNQ():
-    board = [ [0, 0, 0, 0],
-              [0, 0, 0, 0],
-              [0, 0, 0, 0],
-              [0, 0, 0, 0]]
-              
-    if solveNQUtil(board, 0) == False:
-        print ("Solution does not exist")
-        return False
- 
-    printSolution(board)
-    return True
- 
-# Driver Code
-solveNQ()
+if __name__ == "__main__":
+    maze = [[1, 0, 0, 0],
+            [1, 1, 0, 1],
+            [0, 1, 0, 0],
+            [1, 1, 1, 1]]
+
+    solveMaze(maze)
 ```
 ## Output:
 
-![image](https://github.com/user-attachments/assets/0bb8f784-0fd8-4025-abd0-3bd2c4fdb359)
+<img src=https://github.com/user-attachments/assets/63dec5cb-1917-45de-b471-8a7945d244a2 width = 250 height = 200>
 
 
 ## Result:
-The N-Queens program executed successfully, and a valid board configuration was generated.
+The Rat in a Maze program executed successfully, and a valid path from the start to the destination was found and display.
